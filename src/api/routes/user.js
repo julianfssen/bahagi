@@ -5,6 +5,6 @@ var route = express_1.Router();
 exports.default = (function (app) {
     app.use('/users', route);
     route.get('/me', function (req, res) {
-        return res.json({ user: 'test' });
+        return res.json({ user: 'test user' });
     });
 });

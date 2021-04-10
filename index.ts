@@ -1,37 +1,21 @@
 import express from 'express';
 import Knex from 'knex';
 import { Model } from 'objection';
+import config from './src/config';
 import User from './src/models/user';
 
-const knexConfig = require('./knexfile');
-const knex = Knex(knexConfig.development);
-Model.knex(knex);
+async function startServer() {
+  const app = express();
 
-const app = express();
-
-const port = 3000;
-
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-});
-
-app.listen(port, () => {
-  console.log(`Example app listening at ${port}`)
-});
-
-async function main() {
-  await User.query().delete();
-
-  await User.query().insert({
-    username: 'julianfssen'
+  await require('./src/loaders').default({ expressApp: app });
+  
+  app.get('/', (req, res) => {
+    res.send('Hello World!')
   });
-
-  const people = await User.query();
-
-  console.log(people);
+  
+  app.listen(config.port, () => {
+    console.log(`Example app now running`)
+  });
 }
 
-main().then(() => knex.destroy()).catch((err) => {
-  console.error(err);
-  return knex.destroy();
-})
+startServer();

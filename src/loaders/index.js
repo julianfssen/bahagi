@@ -39,27 +39,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = __importDefault(require("express"));
-var config_1 = __importDefault(require("./src/config"));
-function startServer() {
-    return __awaiter(this, void 0, void 0, function () {
-        var app;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+var express_1 = __importDefault(require("./express"));
+var knex_1 = __importDefault(require("knex"));
+var objection_1 = require("objection");
+exports.default = (function (_a) {
+    var expressApp = _a.expressApp;
+    return __awaiter(void 0, void 0, void 0, function () {
+        var knexConfig, knex;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
-                    app = express_1.default();
-                    return [4 /*yield*/, require('./src/loaders').default({ expressApp: app })];
+                    knexConfig = require('../../knexfile');
+                    knex = knex_1.default(knexConfig.development);
+                    objection_1.Model.knex(knex);
+                    return [4 /*yield*/, express_1.default({ app: expressApp })];
                 case 1:
-                    _a.sent();
-                    app.get('/', function (req, res) {
-                        res.send('Hello World!');
-                    });
-                    app.listen(config_1.default.port, function () {
-                        console.log("Example app now running");
-                    });
+                    _b.sent();
                     return [2 /*return*/];
             }
         });
     });
-}
-startServer();
+});
