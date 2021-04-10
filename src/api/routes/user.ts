@@ -5,7 +5,8 @@ const route = Router();
 export default (app: Router) => {
   app.use('/users', route);
 
-  route.get('/me', (req: Request, res: Response) => {
-    return res.json({ user: 'test user' });
+  route.get('/me', async (req: Request, res: Response) => {
+    const user = await User.query();
+    return res.json({ user: user });
   });
 }
