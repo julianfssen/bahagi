@@ -155,4 +155,8 @@ dist
 .pnp.*
 
 # ignore compiled JS files
-/**/*.js
+/*.js
+/src/**/*.js
+
+# exclude migration files from gitignore
+!/migrations/

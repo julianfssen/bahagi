@@ -4,20 +4,20 @@ import Receipt from './receipt';
 export default class Item extends Model {
   id!: number;
   name!: string;
-  price!: number;
+  amount!: number;
   receipt!: Receipt;
 
   static tableName = 'items';
 
   static jsonSchema = {
     type: 'object',
-    required: ['name', 'price'],
+    required: ['name', 'amount'],
 
     properties: {
       id: { type: 'integer' },
       receiptId: { type: 'integer'},
       name: { type: 'string', minLength: 1, maxLength: 255 },
-      price: { type: 'number' },
+      amount: { type: 'number' },
     },
   }
 

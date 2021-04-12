@@ -23,7 +23,7 @@ export default class User extends Model {
   static relationMappings = () => ({
     receipts: {
       relation: Model.HasManyRelation,
-      modelClass: Receipt
+      modelClass: Receipt,
 
       join: {
         from: 'users.id',
