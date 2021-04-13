@@ -1,10 +1,8 @@
 // Update with your config settings.
-
 module.exports = {
-
   development: {
     client: 'postgresql',
-    connection: 'postgres://postgres:adiba4@localhost/splitbuddy_dev'
+    connection: process.env.DB_CONNECTION
   },
 
   staging: {

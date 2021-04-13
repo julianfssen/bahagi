@@ -5,6 +5,7 @@ import Item from './item';
 export default class Receipt extends Model {
   id!: number;
   name!: string;
+  imageUrl: string;
   totalAmount!: number;
   payer!: User;
   items!: Item[];
@@ -18,6 +19,7 @@ export default class Receipt extends Model {
     properties: {
       id: { type: 'integer' },
       name: { type: 'string', minLength: 1, maxLength: 255 },
+      imageUrl: { type: 'string', minLength: 1, maxLength: 1024 },
       payerId: { type: 'integer' },
       itemIds: { type: 'array', items: { type: 'integer' } },
       totalAmount: { type: 'integer' }
