@@ -5,7 +5,7 @@ import Item from './item';
 export default class Receipt extends Model {
   id!: number;
   name!: string;
-  imageUrl: string;
+  imageUrl!: string;
   totalAmount!: number;
   payer!: User;
   items!: Item[];

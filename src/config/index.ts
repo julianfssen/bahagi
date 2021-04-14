@@ -8,8 +8,10 @@ if (envFound.error) {
   throw new Error('Cannot find .env file');
 }
 
+const port: string = process.env.PORT || '3000';
+
 export default {
-  port: parseInt(process.env.PORT, 10),
+  port: parseInt(port, 10),
   databaseUrl: process.env.DB_CONNECTION,
   api: { prefix: '/api' },
 }
