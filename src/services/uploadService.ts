@@ -1,0 +1,41 @@
+import { v4 as uuidv4 } from "uuid";
+import { createReadStream, unlink } from "fs";
+import {
+  S3Client,
+  ListBucketsCommand,
+  PutObjectCommand,
+  GetObjectCommand,
+} from "@aws-sdk/client-s3";
+
+interface S3Params {
+  Bucket?: any;
+  Key?: any;
+  Body?: any;
+  ContentType?: any;
+}
+
+const params: S3Params = {
+  Bucket: process.env.AWS_BUCKET,
+};
+
+const s3 = new S3Client({ region: process.env.AWS_REGION });
+
+export default class UploadService {
+  static async processImage(image: unknown) {
+    const uniqueKey = uuidv4();
+
+    const postParams = { ...params };
+    postParams.Key = `${uniqueKey}-${image.filename}`;
+    postParams.ContentType = `${image.mimetype}`;
+    const imageStream = createReadStream(image.path);
+    postParams.Body = imageStream;
+    const data = await s3.send(new PutObjectCommand(postParams));
+    unlink(image.path, (err) => {
+      if (err) {
+        throw err;
+      }
+    });
+
+    return image.filename;
+  }
+}

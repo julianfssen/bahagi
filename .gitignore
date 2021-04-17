@@ -160,3 +160,8 @@ dist
 
 # exclude migration files from gitignore
 !/migrations/
+
+# exclude config files
+.eslintignore
+.prettierignore
+.prettierrc.json

@@ -1,25 +1,33 @@
-import Receipt from '../models/receipt';
-import Item from '../models/item';
+import Receipt from "../models/receipt";
+import Item from "../models/item";
 
-export default class ReceiptService() {
-  async create({ name, imageUrl, items }) {
-    const newReceipt = await Receipt.query().insert(
-      { name: 'new receipt', imageUrl }
-    );
+export default class ReceiptService {
+  static async create({
+    name,
+    imageUrl,
+    items,
+  }: {
+    name: string;
+    imageUrl: string;
+    items: string[];
+  }) {
+    const newReceipt = await Receipt.query().insert({
+      name: "new receipt",
+      imageUrl: imageUrl,
+    });
 
     return newReceipt;
   }
 
-  async getAllReceiptsByUser(userId) {
+  static async getAllReceiptsByUser(userId: number) {
     const receipts = await Receipt.query().where({ payer_id: userId });
 
     return receipts;
   }
 
-  async getReceipt(receiptId) {
-    const receipt = await Receipt.query().findById(userId);
+  static async getReceipt(receiptId: number) {
+    const receipt = await Receipt.query().findById(receiptId);
 
     return receipt;
   }
-
 }
