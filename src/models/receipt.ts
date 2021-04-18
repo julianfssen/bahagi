@@ -1,30 +1,30 @@
-import { Model, Modifiers } from 'objection';
-import User from './user';
-import Item from './item';
+import { Model, Modifiers } from "objection";
+import User from "./user";
+import Item from "./item";
 
 export default class Receipt extends Model {
   id!: number;
   name!: string;
   imageUrl!: string;
   totalAmount!: number;
-  payer!: User;
+  payerId!: number;
   items!: Item[];
 
-  static tableName = 'receipts';
+  static tableName = "receipts";
 
   static jsonSchema = {
-    type: 'object',
-    required: ['totalAmount', 'payer', 'items'],
+    type: "object",
+    // required: ["totalAmount", "payerId", "items"],
 
     properties: {
-      id: { type: 'integer' },
-      name: { type: 'string', minLength: 1, maxLength: 255 },
-      imageUrl: { type: 'string', minLength: 1, maxLength: 1024 },
-      payerId: { type: 'integer' },
-      itemIds: { type: 'array', items: { type: 'integer' } },
-      totalAmount: { type: 'integer' }
-    }
-  }
+      id: { type: "integer" },
+      name: { type: "string", minLength: 1, maxLength: 255 },
+      imageUrl: { type: "string", minLength: 1, maxLength: 1024 },
+      payerId: { type: "integer" },
+      itemIds: { type: "array", items: { type: "integer" } },
+      totalAmount: { type: "integer" },
+    },
+  };
 
   static relationMappings = () => ({
     payer: {
@@ -32,8 +32,8 @@ export default class Receipt extends Model {
       modelClass: User,
 
       join: {
-        from: 'receipts.payerId',
-        to: 'users.id'
+        from: "receipts.payerId",
+        to: "users.id",
       },
     },
 
@@ -42,8 +42,8 @@ export default class Receipt extends Model {
       modelClass: Item,
 
       join: {
-        from: 'receipts.id',
-        to: 'items.receiptId'
+        from: "receipts.id",
+        to: "items.receiptId",
       },
     },
   });

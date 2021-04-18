@@ -3,17 +3,21 @@ import Item from "../models/item";
 
 export default class ReceiptService {
   static async create({
+    payerId,
     name,
     imageUrl,
     items,
   }: {
+    payerId: number;
     name: string;
     imageUrl: string;
-    items: string[];
+    items: Item[];
   }) {
     const newReceipt = await Receipt.query().insert({
-      name: "new receipt",
-      imageUrl: imageUrl,
+      payerId,
+      name,
+      imageUrl,
+      items: [],
     });
 
     return newReceipt;
