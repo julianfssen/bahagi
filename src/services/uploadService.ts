@@ -38,7 +38,7 @@ export default class UploadService {
         }
       });
 
-      return true;
+      return { success: true, filename: postParams.Key };
     } catch (err) {
       return err;
     }

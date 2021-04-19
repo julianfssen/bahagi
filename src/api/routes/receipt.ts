@@ -32,9 +32,11 @@ export default (app: Router) => {
       try {
         console.log("inside route");
         const multerReq = req as MulterRequest;
-        const success = UploadService.processImage(multerReq.file);
+        const { success, filename } = await UploadService.processImage(
+          multerReq.file
+        );
         if (success) {
-          const imageUrl = multerReq.file.filename;
+          const imageUrl = filename;
           const receipt = await ReceiptService.create({
             payerId: 1,
             name: "test receipt",
