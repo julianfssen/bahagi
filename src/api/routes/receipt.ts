@@ -1,6 +1,14 @@
 import { Router, Request, Response } from "express";
+import UploadService from "../../services/uploadService";
 import ReceiptService from "../../services/receiptService";
+const multer = require("multer");
+
+const upload = multer({ dest: "tmp/" });
 const route = Router();
+
+interface MulterRequest extends Request {
+  file: any;
+}
 
 export default (app: Router) => {
   app.use("/receipts", route);
@@ -17,14 +25,28 @@ export default (app: Router) => {
     return res.json({ receipt: receipt });
   });
 
-  route.post("/", async (req: Request, res: Response) => {
-    const imageUrl = "";
-    const receipt = await ReceiptService.create({
-      name: "",
-      imageUrl,
-      items: [],
-    });
+  route.post(
+    "/",
+    upload.single("receiptImage"),
+    async (req: Request, res: Response) => {
+      try {
+        console.log("inside route");
+        const multerReq = req as MulterRequest;
+        const success = UploadService.processImage(multerReq.file);
+        if (success) {
+          const imageUrl = multerReq.file.filename;
+          const receipt = await ReceiptService.create({
+            payerId: 1,
+            name: "test receipt",
+            imageUrl,
+            items: [],
+          });
 
-    return res.json({ status: "Created new receipt!", receipt: receipt });
-  });
+          return res.json({ message: "Created new receipt!", receipt });
+        }
+      } catch (err) {
+        console.error("Failed to upload image: ", err);
+      }
+    }
+  );
 };

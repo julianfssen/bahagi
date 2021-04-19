@@ -32,6 +32,7 @@ export default (app: Router) => {
 
         if (success) {
           const newReceipt = ReceiptService.create({
+            payerId: 1,
             name: "test receipt",
             imageUrl: multerReq.file.filename,
             items: [],

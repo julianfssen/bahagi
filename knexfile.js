@@ -1,8 +1,11 @@
+const { knexSnakeCaseMappers } = require('objection');
 // Update with your config settings.
 module.exports = {
   development: {
     client: 'postgresql',
-    connection: process.env.DB_CONNECTION
+    connection: process.env.DB_CONNECTION,
+
+    ...knexSnakeCaseMappers()
   },
 
   staging: {

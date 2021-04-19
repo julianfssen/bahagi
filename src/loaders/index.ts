@@ -1,9 +1,9 @@
-import expressLoader from './express';
-import Knex from 'knex';
-import { Model } from 'objection';
+import expressLoader from "./express";
+import Knex from "knex";
+import { Model } from "objection";
 
 export default async ({ expressApp }: any) => {
-  const knexConfig = require('../../knexfile');
+  const knexConfig = require("../../knexfile");
   const knex = Knex(knexConfig.development);
   Model.knex(knex);
 
