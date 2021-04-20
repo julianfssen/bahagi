@@ -14,7 +14,7 @@ export default class Receipt extends Model {
 
   static jsonSchema = {
     type: "object",
-    // required: ["totalAmount", "payerId", "items"],
+    required: ["totalAmount", "payerId", "items"],
 
     properties: {
       id: { type: "integer" },
