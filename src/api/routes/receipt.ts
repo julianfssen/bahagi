@@ -1,7 +1,11 @@
 import { Router, Request, Response } from "express";
 import UploadService from "../../services/uploadService";
 import ReceiptService from "../../services/receiptService";
-import { processImage, readImage } from "../../services/azureVisionService";
+import {
+  processImage,
+  readImage,
+  extractLines,
+} from "../../services/azureVisionService";
 const multer = require("multer");
 
 const upload = multer({ dest: "tmp/" });
@@ -24,8 +28,9 @@ export default (app: Router) => {
       const operationLocation = readObject.operationLocation;
       const operationId = operationLocation.split("/").pop();
       const readResponse = await readImage(operationId as string);
-      console.log(readResponse.analyzeResult?.readResults[0].lines);
+      const lines = extractLines(readResponse);
       // return res.json({ receipts: receipts });
+      console.log(lines);
       return res.json({ message: "successfully called azure!" });
     } catch (err) {
       console.log(err);

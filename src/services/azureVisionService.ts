@@ -26,3 +26,7 @@ export async function readImage(operationId: string) {
 
   return response;
 }
+
+export async function extractLines(readResponse: any) {
+  return readResponse.analyzeResult?.readResults[0].lines;
+}
