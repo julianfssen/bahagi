@@ -23,7 +23,7 @@ export default (app: Router) => {
     // const receipts = await ReceiptService.getAllReceiptsByUser(userId);
     try {
       const readObject = await processImage(
-        "https://i.redd.it/q1defxha98i21.jpg"
+        "https://i.ibb.co/xgF5GJK/20-ED41-F4-AC2-D-4-ED3-8-CFC-F37-F5-EC075-E2.jpg"
       );
       const operationLocation = readObject.operationLocation;
       const operationId = operationLocation.split("/").pop();
