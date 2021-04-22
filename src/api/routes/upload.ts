@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import UploadService from "../../services/uploadService";
 import ReceiptService from "../../services/receiptService";
+import { processImage as textract } from "../../services/textractService";
 const multer = require("multer");
 
 const route = Router();
@@ -15,8 +16,10 @@ export default (app: Router) => {
 
   route.get("/:filename", async (req: Request, res: Response) => {
     try {
-      const response = await UploadService.getImage(req.params.filename);
-      response.Body.pipe(res);
+      // const response = await UploadService.getImage(req.params.filename);
+      await textract();
+      //response.Body.pipe(res);
+      return res.json({ message: "successfully analyzed text" });
     } catch (err) {
       res.send(err);
     }
