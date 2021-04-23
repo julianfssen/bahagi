@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import UploadService from "../../services/uploadService";
 import ReceiptService from "../../services/receiptService";
+import { detectText, extractLines } from "../../services/textractService";
 const multer = require("multer");
 
 const upload = multer({ dest: "tmp/" });
@@ -36,15 +37,15 @@ export default (app: Router) => {
           multerReq.file
         );
         if (success) {
-          const imageUrl = filename;
-          const receipt = await ReceiptService.create({
-            payerId: 1,
-            name: "test receipt",
-            imageUrl,
-            items: [],
-          });
-
-          return res.json({ message: "Created new receipt!", receipt });
+          //   const imageUrl = filename;
+          //   const receipt = await ReceiptService.create({
+          //     payerId: 1,
+          //     name: "test receipt",
+          //     imageUrl,
+          //     items: [],
+          //   });
+          await detectText(filename);
+          return res.json({ message: "Uploaded new receipt!" });
         }
       } catch (err) {
         console.error("Failed to upload image: ", err);

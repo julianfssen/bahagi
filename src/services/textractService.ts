@@ -4,7 +4,14 @@ import {
   DetectDocumentTextCommand,
 } from "@aws-sdk/client-textract";
 
-const client = new TextractClient({ region: process.env.AWS_REGION });
+const FILTERED_WORDS = [
+  "total",
+  "subtotal",
+  "tax",
+  "credit card",
+  "debit card",
+  "sst",
+];
 
 interface CustomS3Object {
   Bucket: string;
@@ -32,32 +39,29 @@ const S3Document: CustomDocument = {
   S3Object: S3Image,
 };
 
-export async function processImage() {
+export async function detectText(objectKey: string) {
+  const client = new TextractClient({ region: process.env.AWS_REGION });
+
   S3Image.Bucket = process.env.AWS_BUCKET as string;
-  S3Image.Name =
-    "cb86a167-2e6f-41d6-bc67-20c51c1127c9-be40e9e1bacc469c0f842f9e0eb587ad";
+  S3Image.Name = objectKey;
   params.Document = S3Document;
 
   const command = new DetectDocumentTextCommand(params);
   const response: any = await client.send(command);
   const blocks: any = response.Blocks;
 
+  await extractLines(blocks);
+}
+
+export async function extractLines(blocks: any) {
   let prevText = "";
   let prevTop = 0;
   let combiner = "";
   const lines: string[] = [];
 
   const priceMatcher = (input: string) => {
-    const filteredWords = [
-      "total",
-      "subtotal",
-      "tax",
-      "credit card",
-      "debit card",
-      "sst",
-    ];
     const priceMatcher = /(RM|MYR|€|\$)\s?(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2}))|(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})?)\s?(RM|MYR|€|\$)/;
-    const tagMatcher = new RegExp(filteredWords.join("|"), "i");
+    const tagMatcher = new RegExp(FILTERED_WORDS.join("|"), "i");
     if (priceMatcher.test(input)) {
       if (!tagMatcher.test(input)) {
         return true;
@@ -72,8 +76,20 @@ export async function processImage() {
       const currText = block.Text;
       const currTop = block.Geometry.BoundingBox.Top;
       const diff = Math.abs(currTop - prevTop);
+      console.log(
+        "Curr: ",
+        currText,
+        " Prev: ",
+        prevText,
+        " | ",
+        currTop,
+        prevTop,
+        " | ",
+        diff,
+        diff < 0.001
+      );
 
-      if (diff < 0.0015) {
+      if (diff < 0.001) {
         combiner = prevText + " " + currText;
       } else {
         if (combiner.length > 0) {
@@ -88,6 +104,7 @@ export async function processImage() {
       prevTop = currTop;
     }
   });
+
   lines.forEach((line) => {
     if (priceMatcher(line)) {
       console.log("receipt item: ", line);
