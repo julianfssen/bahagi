@@ -7,7 +7,8 @@ import routes from "../api";
 export default ({ app }: { app: express.Application }) => {
   app.use(cors());
   app.use(bodyParser.json());
-  app.use(config.api.prefix, routes());
+  // app.use(config.api.prefix, routes());
+  app.use("/", routes());
   app.set("views", "./src/views");
   app.set("view engine", "pug");
 
