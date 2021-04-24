@@ -50,7 +50,9 @@ export async function detectText(objectKey: string) {
   const response: any = await client.send(command);
   const blocks: any = response.Blocks;
 
-  await extractLines(blocks);
+  const items = await extractLines(blocks);
+
+  return items;
 }
 
 export async function extractLines(blocks: any) {
@@ -60,7 +62,7 @@ export async function extractLines(blocks: any) {
   const lines: string[] = [];
 
   const priceMatcher = (input: string) => {
-    const priceMatcher = /(RM|MYR|€|\$)\s?(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2}))|(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})?)\s?(RM|MYR|€|\$)/;
+    const priceMatcher = /(RM|MYR|€|\$)?\s?(\d{1,3}(?:[.,]\d{3})*(?:[.]\d{2}))|(\d{1,3}(?:[.,]\d{3})*(?:[.]\d{2})?)\s?(RM|MYR|€|\$)/;
     const tagMatcher = new RegExp(FILTERED_WORDS.join("|"), "i");
     if (priceMatcher.test(input)) {
       if (!tagMatcher.test(input)) {
@@ -76,20 +78,8 @@ export async function extractLines(blocks: any) {
       const currText = block.Text;
       const currTop = block.Geometry.BoundingBox.Top;
       const diff = Math.abs(currTop - prevTop);
-      console.log(
-        "Curr: ",
-        currText,
-        " Prev: ",
-        prevText,
-        " | ",
-        currTop,
-        prevTop,
-        " | ",
-        diff,
-        diff < 0.001
-      );
 
-      if (diff < 0.001) {
+      if (diff < 0.01) {
         combiner = prevText + " " + currText;
       } else {
         if (combiner.length > 0) {
@@ -105,9 +95,13 @@ export async function extractLines(blocks: any) {
     }
   });
 
+  const receiptItems: string[] = [];
+
   lines.forEach((line) => {
     if (priceMatcher(line)) {
-      console.log("receipt item: ", line);
+      receiptItems.push(line);
     }
   });
+
+  return receiptItems;
 }

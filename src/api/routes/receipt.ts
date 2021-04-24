@@ -15,9 +15,18 @@ export default (app: Router) => {
   app.use("/receipts", route);
 
   route.get("/", async (req: Request, res: Response) => {
-    const userId = parseInt(req.params.userId);
-    const receipts = await ReceiptService.getAllReceiptsByUser(userId);
-    return res.json({ receipts: receipts });
+    try {
+      // const response = await UploadService.getImage(req.params.filename);
+      // response.Body.pipe(res);
+      // await detectText(req.params.filename);
+      // return res.json({ message: "successfully analyzed text" });
+      res.render("index");
+    } catch (err) {
+      res.send(err);
+    }
+    // const userId = parseInt(req.params.userId);
+    // const receipts = await ReceiptService.getAllReceiptsByUser(userId);
+    // return res.json({ receipts: receipts });
   });
 
   route.get("/:receiptId", async (req: Request, res: Response) => {
@@ -44,8 +53,9 @@ export default (app: Router) => {
           //     imageUrl,
           //     items: [],
           //   });
-          await detectText(filename);
-          return res.json({ message: "Uploaded new receipt!" });
+          const items = await detectText(filename);
+          res.render("index", { receipts: items });
+          // return res.json({ message: "Uploaded new receipt!" });
         }
       } catch (err) {
         console.error("Failed to upload image: ", err);

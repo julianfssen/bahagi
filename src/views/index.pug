@@ -1,0 +1,24 @@
+html
+  head
+    title Split Buddy
+  body
+    h1 Upload a receipt to see your expenses
+    form(
+      action='/api/receipts'
+      method='post'
+      enctype='multipart/form-data'
+    )
+      div
+        input(
+          type='file'
+          name='receiptImage'
+        )
+      div
+        input(
+          type='submit'
+          value='Upload Receipt'
+        )
+    if receipts
+      ul
+        each val in receipts
+          li= val

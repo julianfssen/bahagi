@@ -1,16 +1,18 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import cors from 'cors';
-import config from '../config';
-import routes from '../api';
+import express from "express";
+import bodyParser from "body-parser";
+import cors from "cors";
+import config from "../config";
+import routes from "../api";
 
 export default ({ app }: { app: express.Application }) => {
   app.use(cors());
   app.use(bodyParser.json());
   app.use(config.api.prefix, routes());
+  app.set("views", "./src/views");
+  app.set("view engine", "pug");
 
   app.use((req, res, next) => {
-    const err = new Error('Not Found');
+    const err = new Error("Not Found");
     console.error(err);
     next(err);
   });
@@ -20,7 +22,7 @@ export default ({ app }: { app: express.Application }) => {
     res.json({
       errors: {
         message: err.message,
-      }
+      },
     });
   });
-}
+};
