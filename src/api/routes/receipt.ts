@@ -40,7 +40,6 @@ export default (app: Router) => {
     upload.single("receiptImage"),
     async (req: Request, res: Response) => {
       try {
-        console.log("inside route");
         const multerReq = req as MulterRequest;
         const { success, filename } = await UploadService.processImage(
           multerReq.file
