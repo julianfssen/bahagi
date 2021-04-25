@@ -24,10 +24,12 @@ interface CustomDocument {
 
 interface S3RequestType {
   Document: CustomDocument | undefined;
+  FeatureTypes: string[];
 }
 
 const params: S3RequestType = {
   Document: undefined,
+  FeatureTypes: ["TABLES"],
 };
 
 const S3Image: CustomS3Object = {
