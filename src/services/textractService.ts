@@ -100,6 +100,7 @@ export async function extractLines(blocks: any) {
   const receiptItems: string[] = [];
 
   lines.forEach((line) => {
+    console.log(line);
     if (priceMatcher(line)) {
       receiptItems.push(line);
     }
