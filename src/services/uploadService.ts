@@ -31,12 +31,7 @@ export default class UploadService {
       postParams.ContentType = `${image.mimetype}`;
       const imageStream = createReadStream(image.path);
       postParams.Body = imageStream;
-      console.log("uploading to S3 now!");
-      console.log(process.env.AWS_BUCKET);
       const data = await s3.send(new PutObjectCommand(postParams));
-      if (data) {
-        console.log("got response from s3", data);
-      }
       unlink(image.path, (err) => {
         if (err) {
           throw err;
