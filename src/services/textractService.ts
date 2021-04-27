@@ -59,6 +59,7 @@ export async function detectText(objectKey: string) {
 
 export async function extractLines(blocks: any) {
   let prevText = "";
+  let isPrevTextAPriceItem = false;
   let prevTop = 0;
   let combiner = "";
   const lines: string[] = [];
@@ -78,10 +79,19 @@ export async function extractLines(blocks: any) {
   blocks.forEach((block: any) => {
     if (block.BlockType === "LINE") {
       const currText = block.Text;
+      const isCurrTextAPriceItem = priceMatcher(currText);
       const currTop = block.Geometry.BoundingBox.Top;
       const diff = Math.abs(currTop - prevTop);
 
-      if (diff < 0.01) {
+      if (isCurrTextAPriceItem && !isPrevTextAPriceItem) {
+        console.log(currText, prevText);
+        if (diff > 0.01 && diff < 0.04) {
+          combiner = prevText + " " + currText;
+          return;
+        }
+      }
+
+      if (isCurrTextAPriceItem === isPrevTextAPriceItem || diff < 0.01) {
         combiner = prevText + " " + currText;
       } else {
         if (combiner.length > 0) {
@@ -94,13 +104,13 @@ export async function extractLines(blocks: any) {
 
       prevText = currText;
       prevTop = currTop;
+      isPrevTextAPriceItem = isCurrTextAPriceItem;
     }
   });
 
   const receiptItems: string[] = [];
 
   lines.forEach((line) => {
-    console.log(line);
     if (priceMatcher(line)) {
       receiptItems.push(line);
     }
