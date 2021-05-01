@@ -29,11 +29,22 @@ export default (app: Router) => {
     // return res.json({ receipts: receipts });
   });
 
-  route.get("/:receiptId", async (req: Request, res: Response) => {
-    const receiptId = parseInt(req.params.receiptId);
-    const receipt = await ReceiptService.getReceipt(receiptId);
-    return res.json({ receipt: receipt });
+  route.get("/:filename", async (req: Request, res: Response) => {
+    try {
+      const filename = req.params.filename;
+      const items = await detectText(filename);
+      res.render("index", { receipts: items });
+      // return res.json({ message: "Uploaded new receipt!" });
+    } catch (err) {
+      console.error("Failed to fetch image: ", err);
+    }
   });
+
+  // route.get("/:receiptId", async (req: Request, res: Response) => {
+  //   const receiptId = parseInt(req.params.receiptId);
+  //   const receipt = await ReceiptService.getReceipt(receiptId);
+  //   return res.json({ receipt: receipt });
+  // });
 
   route.post(
     "/",

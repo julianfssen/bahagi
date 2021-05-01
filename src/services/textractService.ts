@@ -84,7 +84,6 @@ export async function extractLines(blocks: any) {
       const diff = Math.abs(currTop - prevTop);
 
       if (isCurrTextAPriceItem && !isPrevTextAPriceItem) {
-        console.log(currText, prevText);
         if (diff > 0.01 && diff < 0.04) {
           combiner = prevText + " " + currText;
           return;
